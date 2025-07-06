@@ -23,6 +23,7 @@ pyperclip
 requests
 faiss-cpu
 pydub
+langchain-huggingface
 
 # --- CORREÇÃO FINAL E DECISIVA AQUI ---
 # Força a instalação da versão mais recente do pytube para corrigir o erro 400
