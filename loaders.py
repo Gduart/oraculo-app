@@ -22,7 +22,7 @@ def carrega_site(url: str) -> str:
 
 # ===== INÍCIO DA CORREÇÃO DEFINITIVA =====
 def carrega_youtube(video_url: str) -> str:
-    st.info(f"🔮 Iniciando download e transcrição do vídeo...")
+    st.info(f"🔮 Iniciando download do áudio...")
     st.warning("Este processo pode demorar e consome créditos da API OpenAI.")
     
     openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -32,22 +32,23 @@ def carrega_youtube(video_url: str) -> str:
 
     with tempfile.TemporaryDirectory() as save_dir:
         try:
-            # Configura o YoutubeAudioLoader para ser mais eficiente
-            # 'bestaudio/best': Pega a melhor faixa de áudio disponível
-            # 'nopostoverwrites': Evita o passo pesado de pós-processamento
+            # Opções explícitas para o downloader para evitar pós-processamento pesado
+            downloader_options = {
+                "format": "m4a/bestaudio/best", # Pega o melhor áudio já em formato m4a
+                "nopostoverwrites": True,      # Não sobrescreve se já existe
+                "fixup": "never"               # NUNCA tenta "consertar" o arquivo
+            }
+
             loader_audio = YoutubeAudioLoader(
                 [video_url], 
                 save_dir,
-                downloader_options={"format": "bestaudio/best", "nopostoverwrites": True}
+                downloader_options=downloader_options
             )
             
-            # O parser que irá transcrever o áudio
             parser = OpenAIWhisperParser(api_key=openai_api_key, language="pt")
-
-            # O GenericLoader combina o carregador de áudio com o parser
             loader_generico = GenericLoader(loader_audio, parser)
             
-            st.info("Download do áudio concluído. Enviando para transcrição...")
+            st.info("Download concluído. Enviando para transcrição...")
             docs = loader_generico.load()
             
             if not docs:
@@ -58,7 +59,6 @@ def carrega_youtube(video_url: str) -> str:
         except Exception as e:
             st.error(f"❌ Ocorreu um erro crítico durante o processo. Erro: {e}"); return ""
 # ===== FIM DA CORREÇÃO DEFINITIVA =====
-
 
 def carrega_arquivo_upload(arquivo_uploader) -> str:
     st.info(f"🔮 Analisando o arquivo: {arquivo_uploader.name}...")
