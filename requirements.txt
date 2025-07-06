@@ -1,0 +1,31 @@
+# requirements.txt - Versões estáveis e compatíveis com o ambiente
+# Análise e correção definitiva por JarvisG
+
+# requirements.txt
+streamlit
+langchain
+langchain-openai
+langchain-community
+langchain-groq
+langchain-deepseek
+langchain-google-genai
+python-dotenv
+pypdf
+beautifulsoup4
+tiktoken
+pyperclip
+requests
+openai-whisper
+ffmpeg-python
+yt-dlp
+langchain-text-splitters
+faiss-cpu
+pydub
+langchain-huggingface
+huggingface-hub
+
+#.\venv\Scripts\Activate.ps1
+#pip install -r requirements.txt
+#cd C:\ProjetoOraculo
+#pip install -r requirements.txt
+#streamlit run Oraculo.py
