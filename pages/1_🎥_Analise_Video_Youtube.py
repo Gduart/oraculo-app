@@ -5,13 +5,13 @@ import streamlit as st
 from dotenv import load_dotenv
 import time
 from io import BytesIO
-import re  # <-- NOVO: Importamos a biblioteca de expressões regulares para validação
+import re  # Biblioteca de expressões regulares para validação
 
-# --- Nossas Novas Importações Robustas ---
+# --- Importações Robustas ---
 from pytube import YouTube
 import openai
 
-# --- Importações do LangChain para Análise ---
+# --- Importações do LangChain ---
 from langchain.prompts import ChatPromptTemplate
 from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.output_parsers import StrOutputParser
@@ -27,7 +27,7 @@ load_dotenv()
 # --- Configurações Iniciais ---
 st.set_page_config(page_title="Análise de Vídeo", page_icon="🎥", layout="wide")
 st.title("🎥 Oráculo - Análise de Vídeo do YouTube")
-st.caption("Cole a URL do vídeo, configure o modelo de análise e extraia insights valiosos!")
+st.caption("Cole a URL de um vídeo específico do YouTube, configure o modelo e extraia insights!")
 
 CONFIG_MODELOS = {
     'Groq': {'modelos': ['Llama3.1-405b-reasoning', 'llama3-70b-8192'], 'api_key': os.getenv("GROQ_API_KEY")},
@@ -36,20 +36,21 @@ CONFIG_MODELOS = {
 
 # --- Funções de Lógica ---
 
-# <-- NOVO: Função de validação de URL -->
 def is_valid_youtube_url(url):
-    """Verifica se a URL fornecida é um link válido de vídeo do YouTube."""
-    # Padrão de regex que cobre os formatos mais comuns de URL do YouTube
-    youtube_regex = (
-        r'(https?://)?(www\.)?'
-        '(youtube|youtu|youtube-nocookie)\.(com|be)/'
-        '(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})')
+    """Verifica se a URL fornecida é um link válido de um vídeo específico do YouTube."""
+    if not url:
+        return False
+    # <-- CORREÇÃO: Usando 'raw string' (r'...') para evitar SyntaxWarning -->
+    youtube_regex = re.compile(
+        r'^(https?://)?(www\.)?'
+        r'(youtube\.com/watch\?v=|youtu\.be/|youtube\.com/embed/)'
+        r'([\w-]{11})$')
     
-    return re.match(youtube_regex, url) is not None
+    return youtube_regex.match(url) is not None
 
 @st.cache_data(show_spinner="Buscando e transcrevendo o áudio do vídeo... (isso pode levar alguns minutos)")
 def transcrever_via_api(url_video):
-    """Função robusta que usa Pytube para obter o áudio em memória e a API Whisper da OpenAI para transcrever."""
+    """Usa Pytube e a API Whisper para transcrever o áudio do vídeo."""
     try:
         yt = YouTube(url_video)
         audio_stream = yt.streams.filter(only_audio=True).first()
@@ -67,14 +68,14 @@ def transcrever_via_api(url_video):
         )
         return transcricao
     except Exception as e:
-        st.error(f"Falha ao processar o vídeo: {e}")
+        st.error(f"Falha ao processar o vídeo. Verifique se o vídeo é público e a URL está correta. Erro: {e}")
         return None
 
 def inicializar_analise_video(provedor, modelo, url_video):
     texto_transcrito = transcrever_via_api(url_video)
     
     if not texto_transcrito:
-        st.warning("A transcrição falhou. Verifique a URL do vídeo ou tente novamente.")
+        st.warning("A transcrição falhou. Não foi possível continuar.")
         return
 
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=200)
@@ -103,30 +104,30 @@ if "memoria_video" not in st.session_state:
 
 with st.sidebar:
     st.header("🛠️ Configurar Análise de Vídeo")
-    url_video = st.text_input("Cole a URL do vídeo do YouTube", key="url_video_input")
+    url_video = st.text_input("Cole a URL do vídeo do YouTube aqui", key="url_video_input")
     
     provedor = st.selectbox("Provedor de Análise", list(CONFIG_MODELOS.keys()), key="provedor_video")
     if provedor:
         modelo = st.selectbox("Modelo de Análise", CONFIG_MODELOS[provedor]['modelos'], key="modelo_video")
             
     if st.button("🚀 Iniciar Análise do Vídeo", use_container_width=True, type="primary"):
-        # <-- NOVO: Bloco de validação -->
-        if not url_video or not is_valid_youtube_url(url_video):
-            st.warning("Por favor, insira uma URL de vídeo do YouTube válida para iniciar a análise.")
-        elif provedor and 'modelo' in locals():
-            st.session_state.memoria_video = []
-            inicializar_analise_video(provedor, modelo, url_video)
+        # <-- CORREÇÃO: Lógica de validação mais clara -->
+        if is_valid_youtube_url(url_video):
+            if provedor and 'modelo' in locals():
+                st.session_state.memoria_video = []
+                inicializar_analise_video(provedor, modelo, url_video)
+            else:
+                st.warning("Por favor, selecione um provedor e um modelo.")
         else:
-            st.warning("Por favor, selecione um provedor e um modelo.")
+            st.error("URL inválida! Por favor, insira o link completo de um vídeo específico do YouTube (ex: https://www.youtube.com/watch?v=...).")
             
     if st.session_state.get('memoria_video'):
         if st.button("🗑️ Apagar Histórico", use_container_width=True):
             st.session_state.memoria_video = []
             st.rerun()
 
-# --- Lógica do Chat Principal ---
+# --- Lógica do Chat Principal (sem alterações) ---
 if "retriever_video" in st.session_state and "chat_model_video" in st.session_state:
-    # ... (o resto do código do chat permanece exatamente o mesmo) ...
     for tipo, conteudo in st.session_state.memoria_video:
         with st.chat_message(tipo):
             st.markdown(conteudo)
@@ -152,9 +153,8 @@ if "retriever_video" in st.session_state and "chat_model_video" in st.session_st
                 
                 prompt_final_str = f"""Você é um assistente especialista em análise de conteúdo de vídeos. Responda à pergunta do usuário com base na transcrição fornecida.
 **Regras:**
-1. Baseie sua resposta **exclusivamente** no 'Contexto da Transcrição' abaixo.
+1. Baseie sua resposta **exclusivamente** no 'Contexto da Transcrição do Vídeo' abaixo.
 2. Se o contexto não tiver a resposta, diga claramente: "A informação não foi encontrada na transcrição do vídeo."
-3. Seja didático, claro e organize suas respostas de forma lógica.
 **Contexto da Transcrição do Vídeo:**
 {contexto_formatado}
 **Pergunta do Usuário:**
