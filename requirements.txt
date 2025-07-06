@@ -1,28 +1,36 @@
 # requirements.txt - Versões estáveis e compatíveis com o ambiente
 # Análise e correção definitiva por JarvisG
 
-# requirements.txt
+# streamlit e utilitários
 streamlit
+python-dotenv
+pyperclip
+requests
+pydub
+
+# Langchain e Módulos de Modelos
 langchain
 langchain-openai
 langchain-community
 langchain-groq
 langchain-deepseek
 langchain-google-genai
-python-dotenv
+langchain-huggingface
+huggingface-hub
+langchain-text-splitters
+
+# Dependências para Loaders e Vector Store
 pypdf
 beautifulsoup4
 tiktoken
-pyperclip
-requests
-openai-whisper
-ffmpeg-python
-yt-dlp
-langchain-text-splitters
 faiss-cpu
-pydub
-langchain-huggingface
-huggingface-hub
+
+# --- MUDANÇAS AQUI ---
+# REMOVIDO: openai-whisper, ffmpeg-python, yt-dlp
+# ADICIONADO: pytube (para pegar o áudio do YouTube)
+# A biblioteca 'openai' já está na sua lista (indiretamente via langchain-openai), 
+# então não precisa adicionar de novo, mas garantimos que ela será usada.
+pytube
 
 #.\venv\Scripts\Activate.ps1
 #pip install -r requirements.txt
