@@ -1,36 +1,37 @@
 # requirements.txt - Versões estáveis e compatíveis com o ambiente
 # Análise e correção definitiva por JarvisG
 
-# streamlit e utilitários
+# Fixa a versão do Python para garantir a compatibilidade
+# Nota: Se o seu app principal precisar do Python 3.11, você pode manter
+# python-version==3.11
+# Se não, 3.9 é uma escolha segura para compatibilidade geral.
+# Por ora, vamos remover a linha para deixar o Streamlit usar a padrão estável.
+
+# Bibliotecas principais do Streamlit e Langchain
 streamlit
 python-dotenv
-pyperclip
-requests
-pydub
-
-# Langchain e Módulos de Modelos
 langchain
 langchain-openai
 langchain-community
 langchain-groq
-langchain-deepseek
 langchain-google-genai
-langchain-huggingface
-huggingface-hub
-langchain-text-splitters
-
-# Dependências para Loaders e Vector Store
+python-dotenv
 pypdf
 beautifulsoup4
 tiktoken
+pyperclip
+requests
 faiss-cpu
+pydub
 
-# --- MUDANÇAS AQUI ---
-# REMOVIDO: openai-whisper, ffmpeg-python, yt-dlp
-# ADICIONADO: pytube (para pegar o áudio do YouTube)
-# A biblioteca 'openai' já está na sua lista (indiretamente via langchain-openai), 
-# então não precisa adicionar de novo, mas garantimos que ela será usada.
-pytube
+# --- CORREÇÃO FINAL E DECISIVA AQUI ---
+# Força a instalação da versão mais recente do pytube para corrigir o erro 400
+pytube>=15.0.0
+
+# As bibliotecas abaixo não são mais necessárias com a nova abordagem
+# openai-whisper
+# ffmpeg-python
+# yt-dlp
 
 #.\venv\Scripts\Activate.ps1
 #pip install -r requirements.txt
