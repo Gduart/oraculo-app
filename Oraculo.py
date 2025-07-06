@@ -168,11 +168,8 @@ def construir_sidebar():
             )
 
 # Removemos o "if __name__ == '__main__':" para seguir o padrão de apps multipágina
-#construir_sidebar()
-#pagina_principal_chat()
+construir_sidebar()
+pagina_principal_chat()
 
-# DEPOIS (A CORREÇÃO)
 
-if __name__ == '__main__':
-    construir_sidebar()
-    pagina_principal_chat()
+
