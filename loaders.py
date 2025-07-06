@@ -5,6 +5,7 @@ from langchain.document_loaders.generic import GenericLoader
 from langchain_community.document_loaders import WebBaseLoader, CSVLoader, PyPDFLoader, TextLoader
 from langchain_community.document_loaders.blob_loaders.youtube_audio import YoutubeAudioLoader
 from langchain_community.document_loaders.parsers.audio import OpenAIWhisperParser
+from langchain_community.document_loaders.generic import GenericLoader
 
 
 def _extrair_conteudo_documentos(lista_documentos):
