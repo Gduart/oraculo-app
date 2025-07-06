@@ -20,7 +20,7 @@ from langchain_google_genai.chat_models import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 load_dotenv()
 
-st.set_page_config(page_title="Análise de Vídeo", page_icon="🎥", layout="wide")
+
 st.title("🎥 Oráculo - Análise de Vídeo do YouTube")
 st.caption("Cole a URL, escolha o modelo de análise e extraia insights poderosos!")
 
