@@ -3,7 +3,12 @@
 import os
 import tempfile
 import streamlit as st
-from langchain.document_loaders.generic import GenericLoader 
+
+# ===== INÍCIO DA CORREÇÃO: Importação Atualizada =====
+# O GenericLoader foi movido para langchain_community.document_loaders.generic
+from langchain_community.document_loaders.generic import GenericLoader 
+# ===== FIM DA CORREÇÃO =====
+
 from langchain_community.document_loaders import WebBaseLoader, CSVLoader, PyPDFLoader, TextLoader
 from langchain_community.document_loaders.blob_loaders.youtube_audio import YoutubeAudioLoader
 from langchain_community.document_loaders.parsers.audio import OpenAIWhisperParser
@@ -20,22 +25,27 @@ def carrega_site(url: str) -> str:
     except Exception as e:
         st.error(f"Não foi possível carregar o site. Erro: {e}"); return ""
 
-# ===== INÍCIO DA CORREÇÃO DE BUG #2 =====
 def carrega_youtube(video_url: str) -> str:
-    st.info(f"🔮 Baixando áudio e transcrevendo o vídeo com OpenAI Whisper...")
-    st.warning("Este processo pode demorar e consome créditos da API OpenAI.")
+    st.info(f"🔮 Iniciando download do áudio. Isso pode demorar...")
+    st.warning("Este processo consome créditos da API OpenAI.")
     
     openai_api_key = os.getenv("OPENAI_API_KEY")
     if not openai_api_key:
-        st.error("Chave da API da OpenAI (OPENAI_API_KEY) não foi encontrada no seu arquivo .env para usar o Whisper.")
+        st.error("Chave da API da OpenAI (OPENAI_API_KEY) não encontrada no seu arquivo .env para usar o Whisper.")
         return ""
 
     with tempfile.TemporaryDirectory() as save_dir:
         try:
-            # Passando a chave da API explicitamente para o parser
+            # O loader agora só baixa o áudio
+            loader_audio = YoutubeAudioLoader([video_url], save_dir)
+            # O parser que irá transcrever
             parser = OpenAIWhisperParser(api_key=openai_api_key, language="pt")
-            loader = GenericLoader(YoutubeAudioLoader([video_url], save_dir), parser)
-            docs = loader.load()
+
+            # Usamos o GenericLoader para combinar o carregamento e a análise
+            loader_generico = GenericLoader(loader_audio, parser)
+            
+            st.info("Download concluído. Enviando para transcrição com Whisper...")
+            docs = loader_generico.load()
             
             if not docs:
                 st.error("A transcrição com Whisper não retornou nenhum documento."); return ""
@@ -44,7 +54,6 @@ def carrega_youtube(video_url: str) -> str:
             return _extrair_conteudo_documentos(docs)
         except Exception as e:
             st.error(f"❌ Ocorreu um erro crítico durante o download ou transcrição. Erro: {e}"); return ""
-# ===== FIM DA CORREÇÃO DE BUG #2 =====
 
 def carrega_arquivo_upload(arquivo_uploader) -> str:
     st.info(f"🔮 Analisando o arquivo: {arquivo_uploader.name}...")
