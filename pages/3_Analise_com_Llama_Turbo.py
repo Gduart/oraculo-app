@@ -26,8 +26,7 @@ from langchain_huggingface.chat_models import ChatHuggingFace
 load_dotenv()
 
 # --- CONFIGURAÇÕES DA PÁGINA ---
-
-st.title("Análise com Llama-Turbo", page_icon="🦙", layout="wide")
+st.set_page_config(page_title="Análise com Llama-Turbo", page_icon="🦙", layout="wide")
 
 MODELO_LLAMA_TURBO = "meta-llama/Meta-Llama-3.1-405B-Instruct"
 TIPOS_FONTES = ['Site', 'Pdf', 'Csv', 'Txt']
