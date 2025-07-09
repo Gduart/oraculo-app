@@ -1,4 +1,4 @@
-# Byte-compiled / optimized / DLL files
+# Byte-compiled / optimized / DLL files - New
 __pycache__/
 *.py[cod]
 *$py.class
@@ -6,7 +6,7 @@ __pycache__/
 # C extensions
 *.so
 
-# Distribution / packaging
+# Distribution / packaging - New
 .Python
 build/
 develop-eggs/
@@ -32,11 +32,11 @@ MANIFEST
 *.manifest
 *.spec
 
-# Installer logs
+# Installer logs - New
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# Unit test / coverage reports - New
 htmlcov/
 .tox/
 .nox/
@@ -51,34 +51,34 @@ coverage.xml
 .pytest_cache/
 cover/
 
-# Translations
+# Translations - New
 *.mo
 *.pot
 
-# Django stuff:
+# Django stuff: - New
 *.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
-# Flask stuff:
+# Flask stuff: - New
 instance/
 .webassets-cache
 
-# Scrapy stuff:
+# Scrapy stuff: - New
 .scrapy
 
-# Sphinx documentation
+# Sphinx documentation - New
 docs/_build/
 
-# PyBuilder
+# PyBuilder - New
 .pybuilder/
 target/
 
-# Jupyter Notebook
+# Jupyter Notebook - New
 .ipynb_checkpoints
 
-# IPython
+# IPython - New
 profile_default/
 ipython_config.py
 
@@ -107,12 +107,12 @@ ipython_config.py
 #   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
 #poetry.lock
 
-# pdm
+# pdm - New
 #   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
 #pdm.lock
 #   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
 #   in version control.
-#   https://pdm.fming.dev/latest/usage/project/#working-with-version-control
+#   https://pdm.fming.dev/latest/usage/project/#working-with-version-control - New
 .pdm.toml
 .pdm-python
 .pdm-build/
@@ -120,14 +120,14 @@ ipython_config.py
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
 __pypackages__/
 
-# Celery stuff
+# Celery stuff - New
 celerybeat-schedule
 celerybeat.pid
 
-# SageMath parsed files
+# SageMath parsed files - New
 *.sage.py
 
-# Environments
+# Environments - New
 .env
 .venv
 env/
@@ -136,14 +136,14 @@ ENV/
 env.bak/
 venv.bak/
 
-# Spyder project settings
+# Spyder project settings - New
 .spyderproject
 .spyproject
 
-# Rope project settings
+# Rope project settings 
 .ropeproject
 
-# mkdocs documentation
+# mkdocs documentation - New
 /site
 
 # mypy
@@ -151,13 +151,13 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
-# Pyre type checker
+# Pyre type checker - New
 .pyre/
 
-# pytype static type analyzer
+# pytype static type analyzer - New
 .pytype/
 
-# Cython debug symbols
+# Cython debug symbols - New
 cython_debug/
 
 # PyCharm
@@ -170,10 +170,10 @@ cython_debug/
 # Ruff stuff:
 .ruff_cache/
 
-# PyPI configuration file
+# PyPI configuration file - new
 .pypirc
 
-# Cursor  
+# Cursor  - New
 #  Cursor is an AI-powered code editor.`.cursorignore` specifies files/directories to 
 #  exclude from AI features like autocomplete and code analysis. Recommended for sensitive data
 #  refer to https://docs.cursor.com/context/ignore-files
